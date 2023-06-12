@@ -1,0 +1,47 @@
+Exhibit IVb = 
+VAR IVbRevenue = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", 'GLA GLTB MONTHLY'[GL Accounts],
+        "Amount", -'GLA GLTB MONTHLY'[Amount]
+    ),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="4",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR IVbExpense = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", 'GLA GLTB MONTHLY'[GL Accounts],
+        "Amount", 'GLA GLTB MONTHLY'[Amount]
+    ),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"5", "6", "7", "8"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR IVbNetSurplus = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", LEFT('GLA GLTB MONTHLY'[GL Accounts],11)&"N_SU",
+        "Amount", -'GLA GLTB MONTHLY'[Amount]
+    ),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"4", "5", "6", "7", "8"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR ExhibitIVb = 
+UNION(IVbRevenue,IVbExpense, IVbNetSurplus)
+
+RETURN ExhibitIVb
