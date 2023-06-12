@@ -1,0 +1,128 @@
+Exhibit Ib = 
+VAR TotalCurrentAssets = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Ib Header","Total Current Assets"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="1",
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2)<>"16",
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2)<>"19",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR TotalCurrentLiabilities = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Ib Header","Total Current Liabilities"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="2",
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2)<>"23",
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2)<>"28",
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2)<>"29",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+
+VAR UnrestrictedNetPosition = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Ib Header","Unrestricted Net Position"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"3", "4", "5", "6", "7", "8"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1) IN {"0","1"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR UnrestrictedCashandEquivalents = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Ib Header","Cash & Equivalents (Unrestricted)"),
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1) IN {"0","1"},
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,3) IN {"101", "103", "104"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR AccountsReceivable = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Ib Header","Accounts Receivable, Net"),
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1) IN {"0","1"},
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2) IN {"12"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR AccruedLiabilities = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Ib Header","Accrued Liabilities"),
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1) IN {"0","1"},
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2) IN {"20", "22", "24", "25", "26"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR DeferredRevenue = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Ib Header","Deferred Revenue"),
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1) IN {"0","1"},
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2) IN {"27"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+
+VAR ExhibitIbTable = 
+UNION(TotalCurrentAssets,TotalCurrentLiabilities,UnrestrictedNetPosition,UnrestrictedCashandEquivalents, AccountsReceivable, AccruedLiabilities, DeferredRevenue)
+
+RETURN ExhibitIbTable
