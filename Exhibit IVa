@@ -1,0 +1,106 @@
+Exhibit IVa = 
+VAR GFRevenue = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund","General Fund",
+        "Fiscal Year", [Fiscal Year],
+        "GL Accounts", [GL Accounts],
+        "Amount",-[Amount]
+    ),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="4",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1)="0",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR GFExpense=
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund", "General Fund",
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", 'GLA GLTB MONTHLY'[GL Accounts],
+        "Amount", 'GLA GLTB MONTHLY'[Amount]
+    ),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"5", "6", "7", "8"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1)="0",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR GFNetSurplus = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund","General Fund Net Surplus",
+        "Fiscal Year", [Fiscal Year],
+        "GL Accounts", LEFT([GL Accounts],11)&"N_SU",
+        "Amount",-[Amount]
+    ),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"4", "5", "6", "7", "8"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1)="0",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR AUXFund = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund","Auxiliary Fund Net Surplus",
+        "Fiscal Year", [Fiscal Year],
+        "GL Accounts", LEFT([GL Accounts],11)&"N_SU",
+        "Amount",-[Amount]
+    ),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"4", "5", "6", "7", "8"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1)="1",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR RESFund = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund","Restricted Fund Net Surplus",
+        "Fiscal Year", [Fiscal Year],
+        "GL Accounts", LEFT([GL Accounts],11)&"N_SU",
+        "Amount",-[Amount]
+    ),
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1)="2",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR PLFund = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund","Plant Fund Net Surplus",
+        "Fiscal Year", [Fiscal Year],
+        "GL Accounts", LEFT([GL Accounts],11)&"N_SU",
+        "Amount",-[Amount]
+    ),
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1)="7",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR NetSurplus = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund","Net Surplus",
+        "Fiscal Year", [Fiscal Year],
+        "GL Accounts", LEFT([GL Accounts],11)&"N_SU",
+        "Amount",-[Amount]
+    ),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"4", "5", "6", "7", "8"},
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR ExhibitIVa = 
+UNION(GFRevenue,GFExpense,GFNetSurplus,AUXFund,RESFund,PLFund,NetSurplus)
+
+RETURN ExhibitIVa
