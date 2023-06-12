@@ -1,0 +1,62 @@
+Exhibit IIIa = 
+VAR RollingLTMNetSurplus = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SELECTCOLUMNS(
+    'GLA GLTB MONTHLY',
+    "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+    "Gla Month", 'GLA GLTB MONTHLY'[Gla Month],
+    "Amount", -'GLA GLTB MONTHLY'[Amount]
+),
+"Header", "Net Surplus"),
+MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"4","5","6","7","8"},
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY19 Actual", "FY20 Actual", "FY21 Actual", "FY22 Actual", "FY23 Actual"}
+)
+
+VAR RollingLTMRevenue = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SELECTCOLUMNS(
+    'GLA GLTB MONTHLY',
+    "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+    "Gla Month", 'GLA GLTB MONTHLY'[Gla Month],
+    "Amount", -'GLA GLTB MONTHLY'[Amount]
+),
+"Header", "Revenue"),
+MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"4"},
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY19 Actual", "FY20 Actual", "FY21 Actual", "FY22 Actual", "FY23 Actual"}
+)
+
+VAR RollingLTMExpense = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SELECTCOLUMNS(
+    'GLA GLTB MONTHLY',
+    "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+    "Gla Month", 'GLA GLTB MONTHLY'[Gla Month],
+    "Amount", 'GLA GLTB MONTHLY'[Amount]
+),
+"Header", "Expense"),
+MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"5","6","7","8"},
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY19 Actual", "FY20 Actual", "FY21 Actual", "FY22 Actual", "FY23 Actual"}
+)
+
+VAR ExhibitIIIaTable = 
+UNION(RollingLTMNetSurplus,RollingLTMRevenue,RollingLTMExpense)
+
+RETURN ExhibitIIIaTable
