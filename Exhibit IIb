@@ -1,0 +1,138 @@
+Exhibit IIb = 
+VAR TotalRevenue = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Header","Total Revenue"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="4",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR TotalExpenses = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Header","Total Expenses"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"5", "6", "7", "8"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR TuitionandFees = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Header","Tuition & Fees"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2) IN {"41", "46"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR StateRevenue = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Header","SSI & State Capital Appropriations"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2) IN {"42"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR OtherRevenue = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Header","Other Revenue"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="4",
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2) <> "41",
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2) <> "46",
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,2) <> "42",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR InstructionAcademicPublicExpenses =
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Header","Instruction, Academic & Public Support Expenses"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"5", "6", "7", "8"},
+    MID('GLA GLTB MONTHLY'[GL Accounts],10,1) IN {"1", "3", "4"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR OtherExpenses = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SUMMARIZE(
+        'GLA GLTB MONTHLY',
+        'GLA GLTB MONTHLY'[Fiscal Year],
+        'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", SUM('GLA GLTB MONTHLY'[Amount])
+    ),
+    "Header","Other Expenses"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"5", "6", "7", "8"},
+    MID('GLA GLTB MONTHLY'[GL Accounts],10,1) <> {"1"},
+    MID('GLA GLTB MONTHLY'[GL Accounts],10,1) <> {"3"},
+    MID('GLA GLTB MONTHLY'[GL Accounts],10,1) <> {"4"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"201",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"202",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"203",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075"
+)
+
+VAR ExhibitIIbTable = 
+UNION(TotalRevenue,TotalExpenses, TuitionandFees, StateRevenue, OtherRevenue, InstructionAcademicPublicExpenses, OtherExpenses)
+
+RETURN ExhibitIIbTable
