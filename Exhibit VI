@@ -1,0 +1,63 @@
+Exhibit VI = 
+VAR VIRevenue = 
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund", "Auxiliary Fund",
+        "Fiscal Year", [Fiscal Year],
+        "GL Accounts", [GL Accounts],
+        "Gla Month", [Gla Month],
+        "Amount",-[Amount]
+    ),
+    "Header VI", "Total Revenues"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="4",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1)="1",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY22 Actual", "FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+
+VAR VITotalExpense=
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund", "Auxiliary Fund",
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", 'GLA GLTB MONTHLY'[GL Accounts],
+        "Gla Month", [Gla Month],
+        "Amount", 'GLA GLTB MONTHLY'[Amount]
+    ),
+    "Header", "Total Expenses"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"5", "6","7"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1)="1",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY22 Actual", "FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR VIDirectMargin=
+CALCULATETABLE(
+    ADDCOLUMNS(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Fund", "Auxiliary Fund",
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", 'GLA GLTB MONTHLY'[GL Accounts],
+        "Gla Month", [Gla Month],
+        "Amount", -'GLA GLTB MONTHLY'[Amount]
+    ),
+    "Header VI", "Direct Margin"),
+    MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"4", "5", "6", "7"},
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],1)="1",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+    LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+    'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY22 Actual", "FY23 Actual", "FY23 Budget", "FY23 Budget YTD"}
+)
+
+VAR VITable = 
+UNION(VIRevenue,VITotalExpense,VIDirectMargin)
+
+RETURN VITable
