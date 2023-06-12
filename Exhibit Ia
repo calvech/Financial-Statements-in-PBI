@@ -1,0 +1,70 @@
+Exhibit Ia = 
+VAR IaAssets = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Header","Assets",
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", 'GLA GLTB MONTHLY'[GL Accounts],
+        "Gla Month", 'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", 'GLA GLTB MONTHLY'[Amount]
+        ),
+        MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="1",
+        LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+        LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+        'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY22 Actual"}
+)
+
+VAR IaLiabilities = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Header","Liabilities",
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", 'GLA GLTB MONTHLY'[GL Accounts],
+        "Gla Month", 'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -'GLA GLTB MONTHLY'[Amount]
+        ),
+        MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="2",
+        LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+        LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+        'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY22 Actual"}
+)
+
+VAR IaBegNetPosition = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Header","Net Position",
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", 'GLA GLTB MONTHLY'[GL Accounts],
+        "Gla Month", 'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -'GLA GLTB MONTHLY'[Amount]
+        ),
+        MID('GLA GLTB MONTHLY'[GL Accounts],12,1)="3",
+        LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+        LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+        'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY22 Actual"}
+)
+
+VAR IaChangeNetPosition = 
+CALCULATETABLE(
+    SELECTCOLUMNS(
+        'GLA GLTB MONTHLY',
+        "Header","Net Position",
+        "Fiscal Year", 'GLA GLTB MONTHLY'[Fiscal Year],
+        "GL Accounts", 'GLA GLTB MONTHLY'[GL Accounts],
+        "Gla Month", 'GLA GLTB MONTHLY'[Gla Month],
+        "Amount", -'GLA GLTB MONTHLY'[Amount]
+        ),
+        MID('GLA GLTB MONTHLY'[GL Accounts],12,1) IN {"4", "5", "6", "7", "8"},
+        LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"068",
+        LEFT('GLA GLTB MONTHLY'[GL Accounts],3)<>"075",
+        'GLA GLTB MONTHLY'[Fiscal Year] IN {"FY23 Actual", "FY22 Actual"}
+)
+
+
+VAR IaTable= 
+UNION(IaAssets,IaLiabilities,IaBegNetPosition, IaChangeNetPosition)
+
+RETURN IaTable
