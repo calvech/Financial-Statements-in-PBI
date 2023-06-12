@@ -1,0 +1,9 @@
+Exhibit IIIa Revenue = 
+CALCULATE(
+    SUM('Exhibit IIIa'[Amount]),
+    FILTER(ALL('LTM Actual Calendar'),
+    'LTM Actual Calendar'[Index] >= MAX('LTM Actual Calendar'[Index])-11 
+    && 'LTM Actual Calendar'[Index]<= MAX('LTM Actual Calendar'[Index])
+    ),
+    'Exhibit IIIa'[Header]="Revenue"
+)
